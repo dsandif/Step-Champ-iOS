@@ -1,0 +1,42 @@
+PODS:
+  - Alamofire (4.0.1)
+  - Charts (2.3.0):
+    - Charts/Core (= 2.3.0)
+  - Charts/Core (2.3.0)
+  - KeychainAccess (3.0.0)
+  - Material (2.1.0)
+  - Spring (1.0.3)
+  - SwiftDate (4.0.3)
+  - SwiftyJSON (3.0.0)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.0)
+  - Charts (~> 2.3)
+  - KeychainAccess (~> 3.0)
+  - Material (~> 2.1)
+  - Spring (from `https://github.com/MengTo/Spring.git`, branch `swift3`)
+  - SwiftDate (~> 4.0)
+  - SwiftyJSON (= 3.0.0)
+
+EXTERNAL SOURCES:
+  Spring:
+    :branch: swift3
+    :git: https://github.com/MengTo/Spring.git
+
+CHECKOUT OPTIONS:
+  Spring:
+    :commit: e5c127b7aa6ce31e5f4d01100a8991423a1eb498
+    :git: https://github.com/MengTo/Spring.git
+
+SPEC CHECKSUMS:
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  Charts: 55d7fd9af175b500208601bea872f0fc72c1d19e
+  KeychainAccess: 412bf2650d9aebfc8135a58103b90ec38caad7f8
+  Material: c5c334bd7fa8c0307cb35be143b7c51c5e2c52a7
+  Spring: 3f02b5dc3308572ef177b3cad0fa7bbc4b0706f7
+  SwiftDate: 8ee0ba571aabf62a3c44585620c199f868f063e9
+  SwiftyJSON: f57b2b44bc166617372d1c70773591fe9f0f5fd4
+
+PODFILE CHECKSUM: b15dfd2a8ed8835ab63c02059215ac1a57299a3b
+
+COCOAPODS: 1.1.0.rc.2
