@@ -21,46 +21,46 @@ class SearchViewController: UIViewController,UITableViewDataSource {
     var results = [JSON]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        navBar.titleLabel.textColor = setColor("ffffff")
-        navigationController?.tabBarItem.setTitleColor(setColor("78A942"), forState: .Focused)
+        navBar.titleLabel.textColor = setColor(colorCode: "ffffff")
+        navigationController?.tabBarItem.setTitleColor(color: setColor(colorCode: "78A942"), forState: .focused)
     }
     
     //Changing Status Bar
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    //override func preferredStatusBarStyle() -> UIStatusBarStyle {
         
         //LightContent
-        return UIStatusBarStyle.LightContent
+    //    return UIStatusBarStyle.lightContent
         
         //Default
         //return UIStatusBarStyle.Default
         
-    }
+   // }
 }
 
 extension SearchViewController: UITableViewDelegate{
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return results.count > 0 ? results.count: 1
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 
         if results.count > 0{
             var result = results[indexPath.row]
             
-            let cell = tableView.dequeueReusableCellWithIdentifier("SearchResultCell") as! SearchResultCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SearchResultCell") as! SearchResultCell
             cell.realnameLabel.text = result["firstname"].stringValue + " " + result["lastname"].stringValue
             cell.usernameLabel.text = result["username"].stringValue
             
-            let iconLetter1 = result["firstname"].stringValue.capitalizedString
-            let iconLetter2 = result["lastname"].stringValue.capitalizedString
+            let iconLetter1 = result["firstname"].stringValue.capitalized
+            let iconLetter2 = result["lastname"].stringValue.capitalized
             
             cell.userIcon.text = iconLetter1[0]+iconLetter2[0]
             return cell
 
         }
-        else if(results.count == 0 && searchBar.text?.length >= 3){
-            let cell = tableView.dequeueReusableCellWithIdentifier("GenericResultCell") as! GenericResultCell
+        else if(results.count == 0 && (searchBar.text?.length)! >= 3){
+            let cell = tableView.dequeueReusableCell(withIdentifier: "GenericResultCell") as! GenericResultCell
             
             switch toggleSwitch.selectedSegmentIndex {
             case 0:
@@ -73,7 +73,7 @@ extension SearchViewController: UITableViewDelegate{
             return cell
         }
         else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("GenericResultCell") as! GenericResultCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "GenericResultCell") as! GenericResultCell
             cell.textNote.text = "Use the search bar to find friends or Step Teams!"
             return cell
         }
@@ -86,10 +86,10 @@ extension SearchViewController: UITableViewDelegate{
 
 extension SearchViewController: UISearchBarDelegate{
 
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 
         if searchText.length >= 3 {
-            Endpoints.apiManager.searchUsers(searchText.trim()){ response in
+            Endpoints.apiManager.searchUsers(term: searchText.replacingOccurrences(of: " ", with: "")){ response in
                 self.results = response.arrayValue
                 print(self.results)
                 self.searchResultsTable.reloadData()

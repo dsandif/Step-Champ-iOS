@@ -15,18 +15,18 @@ class LeaderboardViewController: UIViewController,UITableViewDataSource,UITableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tabBarItem.setTitleColor(setColor("78A942"), forState: .Focused)
+        self.tabBarItem.setTitleColor(color: setColor(colorCode: "78A942"), forState: .focused)
         let refreshControl = UIRefreshControl()
-        navigationController?.tabBarItem.setTitleColor(setColor("78A942"), forState: .Focused)
+        navigationController?.tabBarItem.setTitleColor(color: setColor(colorCode: "78A942"), forState: .focused)
         leaderboardTable.addSubview(refreshControl)
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 17
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Usercell") as? Usercell!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Usercell") as? Usercell!
         
         return cell!
     }

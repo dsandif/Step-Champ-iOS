@@ -12,7 +12,7 @@ import Material
 
 class Usercell: UITableViewCell {
     
-    @IBOutlet weak var card: CardView!
+    @IBOutlet weak var card: Card!
     
     
     

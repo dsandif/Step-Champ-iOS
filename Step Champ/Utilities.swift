@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 
 func setColor(colorCode: String, alpha: Float = 1.0) -> UIColor {
-    let scanner = NSScanner(string:colorCode)
+    let scanner = Scanner(string:colorCode)
     var color:UInt32 = 0;
-    scanner.scanHexInt(&color)
+    scanner.scanHexInt32(&color)
     
     let mask = 0x000000FF
     let r = CGFloat(Float(Int(color >> 16) & mask)/255.0)
@@ -25,16 +25,16 @@ func setColor(colorCode: String, alpha: Float = 1.0) -> UIColor {
 extension String {
     
     subscript (i: Int) -> Character {
-        return self[self.startIndex.advancedBy(i)]
+        return self[i + 1]
     }
     
     subscript (i: Int) -> String {
         return String(self[i] as Character)
     }
     
-    subscript (r: Range<Int>) -> String {
-        let start = startIndex.advancedBy(r.startIndex)
-        let end = start.advancedBy(r.endIndex - r.startIndex)
-        return self[Range(start ..< end)]
-    }
+//    subscript (r: Range<Int>) -> String {
+//        let start = self.startIndex.advancedBy(r.lowerBound)
+//        let end = start.advancedBy(r.upperBound - r.lowerBound)
+//        return self[Range(start ..< end)]
+//    }
 }

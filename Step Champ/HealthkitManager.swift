@@ -26,10 +26,10 @@ class HealthkitManager{
         if HKHealthStore.isHealthDataAvailable(){
             
             // We have to request each data type explicitly
-            let steps = NSSet(object: HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierStepCount)!)
+            let steps = NSSet(object: HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)!)
             
             // Now we can request authorization for step count data
-            storage.requestAuthorizationToShareTypes(nil, readTypes: steps as? Set<HKObjectType>) { (success, error) -> Void in
+            storage.requestAuthorization(toShare: nil, read: steps as? Set<HKObjectType>) { (success, error) -> Void in
                 isEnabled = success
             }
         }
@@ -40,17 +40,17 @@ class HealthkitManager{
         return isEnabled
     }
 
-    func recentSteps(completion: (Double, NSError?) -> () ){
-        let today = NSDate.today()-6.days
-        let tomorrow = NSDate.tomorrow()
+    func recentSteps(completion: @escaping (Double, NSError?) -> () ){
+        let today = Date() - 6.days
+        let tomorrow = Date() + 1.days
         
         // The type of data we are requesting (this is redundant and could probably be an enumeration
-        let type = HKSampleType.quantityTypeForIdentifier(HKQuantityTypeIdentifierStepCount)
+        let type = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
         
         // Our search predicate which will fetch data from now until a day ago
         // (Note, 1.day comes from an extension
         // You'll want to change that to your own NSDate
-        let predicate = HKQuery.predicateForSamplesWithStartDate(today, endDate: tomorrow, options: .None)
+        let predicate = HKQuery.predicateForSamples(withStart: today, end: tomorrow, options: [])
         
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
         
@@ -58,42 +58,42 @@ class HealthkitManager{
         let query = HKSampleQuery(sampleType: type!, predicate: predicate, limit: 0, sortDescriptors: [sortDescriptor]) { query, results, error in
             var steps: Double = 0
             print(results)
-            if results?.count > 0{
+            if (results?.count)! > 0{
                 for result in results as! [HKQuantitySample]{
-                    steps += result.quantity.doubleValueForUnit(HKUnit.countUnit())
+                    steps += result.quantity.doubleValue(for: HKUnit.count())
                     
                 }
             }
             
-            completion(steps, error)
+            completion(steps, error as NSError?)
         }
         
-        storage.executeQuery(query)
+        storage.execute(query)
     }
 
     
-    func getSteps(startDate: NSDate, endDate: NSDate, completion: ([JSON], ErrorType?) -> ()) {
+    func getSteps(startDate: NSDate, endDate: NSDate, completion: @escaping ([JSON], Error?) -> ()) {
         var stepResults = [JSON]()
-        var result: [String: AnyObject] = ["date": "", "steps": 0.0]
+        var result: [String: AnyObject] = ["date": "" as AnyObject, "steps": 0.0 as AnyObject]
         
-        let type = HKSampleType.quantityTypeForIdentifier(HKQuantityTypeIdentifierStepCount)
+        let type = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
         let interval = NSDateComponents()
         interval.day = 1
         
-        let predicate = HKQuery.predicateForSamplesWithStartDate(startDate, endDate: endDate, options: .StrictStartDate)
-        let query = HKStatisticsCollectionQuery(quantityType: type!, quantitySamplePredicate: predicate, options: [.CumulativeSum], anchorDate: startDate, intervalComponents:interval)
+        let predicate = HKQuery.predicateForSamples(withStart: startDate as Date, end: endDate as Date, options: .strictStartDate)
+        let query = HKStatisticsCollectionQuery(quantityType: type!, quantitySamplePredicate: predicate, options: [.cumulativeSum], anchorDate: startDate as Date, intervalComponents:interval as DateComponents)
 
         query.initialResultsHandler = { query, results, error in
             if let myResults = results{
-                myResults.enumerateStatisticsFromDate(startDate, toDate: endDate) {
+                myResults.enumerateStatistics(from: startDate as Date, to: endDate as Date) {
                     statistic, stop in
                     
                     if let quantity = statistic.sumQuantity() {
-                        let date = statistic.startDate.toString(DateFormat.Custom("yyyy-MM-dd"))
-                        let steps = quantity.doubleValueForUnit(HKUnit.countUnit())
+                        let date = statistic.startDate.string(format: DateFormat.custom("yyyy-MM-dd"))
+                        let steps = quantity.doubleValue(for: HKUnit.count())
                         
-                        result["date"] = date
-                        result["steps"] = steps
+                        result["date"] = date as AnyObject?
+                        result["steps"] = steps as AnyObject?
                         stepResults.append(JSON(result))
                     }
                 }
@@ -101,6 +101,6 @@ class HealthkitManager{
             }
         }
         
-        storage.executeQuery(query)
+        storage.execute(query)
     }
 }
