@@ -34,15 +34,15 @@ class ErrorPopupViewController: UIViewController {
         // okay button.
         let btn1: FlatButton = FlatButton()
         btn1.pulseColor = MaterialColor.blue.lighten1
-        btn1.setTitle("OKAY", forState: .Normal)
+        btn1.setTitle("OKAY", for: .normal)
         btn1.setTitleColor(MaterialColor.blue.darken1, forState: .Normal)
-        btn1.addTarget(self, action: #selector(okayButtonPressed), forControlEvents: .TouchUpInside)
+        btn1.addTarget(self, action: #selector(okayButtonPressed), for: .touchUpInside)
         // Add buttons to left side.
         popupView.leftButtons = [btn1]
     }
     
     @IBAction func okayButtonPressed(sender: FlatButton){
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 }

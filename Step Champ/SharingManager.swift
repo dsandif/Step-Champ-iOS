@@ -15,7 +15,6 @@ class SharingManager{
     var keychain = Keychain(service: "com.Step-Champ")
         .label("Step-Champ iOS Credentials")
         .synchronizable(true)
-        .accessibility(.AfterFirstUnlock)
     var currentUsername = ""
     
     //base domain for all api endpoints
